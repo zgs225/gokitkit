@@ -14,5 +14,5 @@ type ErrorWrapper struct {
 // ErrorEncoder
 func ErrorEncoder(_ context.Context, err error, w http.ResponseWriter) {
 	w.WriteHeader(http.StatusBadRequest)
-	json.NewEncoder(w).Encode(errorWrapper{Error: err.Error()})
+	json.NewEncoder(w).Encode(ErrorWrapper{Error: err.Error()})
 }
