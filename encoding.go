@@ -1,8 +1,10 @@
 package gokitkit
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/go-kit/kit/endpoint"
@@ -17,4 +19,15 @@ func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, respo
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	return json.NewEncoder(w).Encode(response)
+}
+
+// EncodeHTTPGenericRequest is a transport/http.EncodeRequestFunc that
+// JSON-encodes any request to the request body. Primarily useful in a client.
+func EncodeHTTPGenericRequest(_ context.Context, r *http.Request, request interface{}) error {
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(request); err != nil {
+		return err
+	}
+	r.Body = ioutil.NopCloser(&buf)
+	return nil
 }
